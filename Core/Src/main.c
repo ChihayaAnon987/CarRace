@@ -16,7 +16,9 @@
   ******************************************************************************
   */
 #include "stdio.h"
+#include "string.h"
 #include "motor.h"
+#include "adaptive_threshold.h"
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -44,11 +46,13 @@ int fputc(int ch, FILE *f)
 
 int16_t measureValLeft;
 int16_t measureValRight;
-
+uint8_t output_image[MT9V03X_H][MT9V03X_W];
 
 
 void HAL_UART_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  if (htim == &htim1) {
+
+  //这里htim1应该是一个自定义的5ms定时器
+  if (htim == &htim1) {          
 
     //左电机
     measureValLeft = (int16_t)__HAL_TIM_GET_COUNTER(&htim2);
@@ -64,6 +68,17 @@ void HAL_UART_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
     //电机控制
     MotorControl();
+    
+    //图像数据传输
+    if (mt9v03x_finish_flag == 1) {
+      //对图像进行二值化处理,这个算法只是最初步的,后面还要优化
+      adaptive_threshold(mt9v03x_image, output_image, MT9V03X_W, MT9V03X_H, block, clip_value);
+
+      //尚不清楚是否要手动把flag置0
+      //mt9v03x_finish_flag = 0;
+
+
+    }
 
 
 
