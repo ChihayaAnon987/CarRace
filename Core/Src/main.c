@@ -17,7 +17,6 @@
   */
 #include "stdio.h"
 #include "motor.h"
-#include "motor.c"
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
