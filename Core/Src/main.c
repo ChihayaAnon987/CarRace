@@ -15,6 +15,9 @@
   *
   ******************************************************************************
   */
+#include "stdio.h"
+#include "motor.h"
+#include "motor.c"
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -32,6 +35,63 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
+int fputc(int ch, FILE *f)
+{
+	//重定向
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xffff);
+	return ch;
+}
+
+int16_t measureValLeft;
+int16_t measureValRight;
+
+
+
+void HAL_UART_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  if (htim == &htim1) {
+
+    //左电机
+    measureValLeft = (int16_t)__HAL_TIM_GET_COUNTER(&htim2);
+    __HAL_TIM_SET_COUNTER(&htim2, 0);
+    printf("%d %d\r\n", measureValLeft, leftMotorPID.targetVal);
+    ComputePID(&leftMotorPID, measureValLeft);
+
+    //右电机
+    measureValRight = (int16_t)__HAL_TIM_GET_COUNTER(&htim3);
+    __HAL_TIM_SET_COUNTER(&htim3, 0);
+    printf("%d %d\r\n", measureValRight, rightMotorPID.targetVal);
+    ComputePID(&rightMotorPID, measureValRight);
+
+    //电机控制
+    MotorControl();
+
+
+
+
+
+
+
+
+
+
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* USER CODE END PTD */
 
@@ -98,7 +158,21 @@ int main(void)
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   mt9v03x_init();
-  
+
+
+  //是这个吗,不是很确定
+  HAL_TIM_Base_Start(&htim1);
+
+  HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
+	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+
+
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
+
+
+
+
   /* USER CODE END 2 */
   
   /* Infinite loop */
