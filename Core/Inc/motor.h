@@ -1,6 +1,7 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
+#include "main.h"
 #include "stdio.h"
 
 #define INTEGRAL_LIMIT 20000

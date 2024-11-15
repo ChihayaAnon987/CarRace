@@ -1,4 +1,5 @@
 #include "motor.h"
+#include "main.h"
 
 struct PIDController leftMotorPID;
 struct PIDController rightMotorPID;
