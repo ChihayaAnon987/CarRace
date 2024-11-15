@@ -18,6 +18,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "motor.h"
+#include "motor_control.h"
 #include "adaptive_threshold.h"
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
@@ -39,46 +40,51 @@
 
 int fputc(int ch, FILE *f)
 {
-	//重定向
+	// 重定向
   HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xffff);
 	return ch;
 }
 
 int16_t measureValLeft;
 int16_t measureValRight;
-uint8_t output_image[MT9V03X_H][MT9V03X_W];
+uint8_t output_image[MT9V03X_W * MT9V03X_H];
 
 
 void HAL_UART_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
-  //这里htim1应该是一个自定义的5ms定时器
+  // 这里htim1应该是一个自定义的5ms定时器
   if (htim == &htim1) {          
 
-    //左电机
+    // 左电机测速
     measureValLeft = (int16_t)__HAL_TIM_GET_COUNTER(&htim2);
     __HAL_TIM_SET_COUNTER(&htim2, 0);
     printf("%d %d\r\n", measureValLeft, leftMotorPID.targetVal);
     ComputePID(&leftMotorPID, measureValLeft);
 
-    //右电机
+    // 右电机测速
     measureValRight = (int16_t)__HAL_TIM_GET_COUNTER(&htim3);
     __HAL_TIM_SET_COUNTER(&htim3, 0);
     printf("%d %d\r\n", measureValRight, rightMotorPID.targetVal);
     ComputePID(&rightMotorPID, measureValRight);
 
-    //电机控制
+
+    // PID初始化
+    pidInit();
+    // PID电机控制
     MotorControl();
     
-    //图像数据传输
+    // 图像数据传输
     if (mt9v03x_finish_flag == 1) {
-      //对图像进行二值化处理,这个算法只是最初步的,后面还要优化
-      adaptive_threshold(mt9v03x_image, output_image, MT9V03X_W, MT9V03X_H, block, clip_value);
+      // 边扫线边二值化处理
+			mazeLineTracing(mt9v03x_image[0], output_image, MT9V03X_W, MT9V03X_H);
 
-      //尚不清楚是否要手动把flag置0
-      //mt9v03x_finish_flag = 0;
-
-
+      // 尚不清楚是否要手动把flag置0
+      // mt9v03x_finish_flag = 0;
     }
+    // 加速
+		motorSpeedup();
+		// 追踪中线
+		motorFollow(output_image);
 
 
 
@@ -174,7 +180,7 @@ int main(void)
   mt9v03x_init();
 
 
-  //是这个吗,不是很确定
+  // 不确定是否需要这个语句
   HAL_TIM_Base_Start(&htim1);
 
   HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);

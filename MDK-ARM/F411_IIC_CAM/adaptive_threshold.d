@@ -1,6 +1,4 @@
-f411_iic_cam/main.o: ..\Core\Src\main.c \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h ..\Core\Inc\motor.h \
+f411_iic_cam/adaptive_threshold.o: ..\Core\Src\adaptive_threshold.c \
   ..\Core\Inc\main.h ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h \
   ..\Core\Inc\stm32f4xx_hal_conf.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc.h \
@@ -33,7 +31,5 @@ f411_iic_cam/main.o: ..\Core\Src\main.c \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
-  ..\Core\Inc\motor_control.h ..\Core\Inc\SEEKFREE_MT9V03X.h \
-  ..\Core\Inc\dma.h ..\Core\Inc\tim.h ..\Core\Inc\usart.h \
-  ..\Core\Inc\adaptive_threshold.h ..\Core\Inc\gpio.h \
-  ..\Core\Inc\SEEKFREE_MT9V03X_CONFIG.h ..\Core\Inc\SEEKFREE_IIC.h
+  ..\Core\Inc\adaptive_threshold.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h
