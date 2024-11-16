@@ -76,7 +76,7 @@ void motorSpeeddown(void) {
 
 
 // 获取中线位置
-int getlinePosition(uint8_t* output_image) {
+int getLinePosition(uint8_t* output_image) {
     int x_center = MT9V03X_W / 2;
     int linePos = -1;  // 用-1标记未找到中线
 
@@ -130,3 +130,10 @@ void motorFollow(uint8_t* output_image) {
     // 设置电机速度
     motorPidSetSpeed(leftSpeed, rightSpeed);
 }
+
+
+
+
+
+
+

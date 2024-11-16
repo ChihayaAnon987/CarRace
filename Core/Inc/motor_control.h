@@ -1,11 +1,6 @@
 #ifndef MOTOR_CONTROL_H
 #define MOTOR_CONTROL_H
 
-<<<<<<< HEAD
-=======
-#include "main.h"
-#include "stdio.h"
->>>>>>> 7b44d06cf2ef5db21a88168a7f73a52f017112e2
 #include "SEEKFREE_MT9V03X.h"
 
 
